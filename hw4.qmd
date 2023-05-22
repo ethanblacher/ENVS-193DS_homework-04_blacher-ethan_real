@@ -1,0 +1,140 @@
+---
+title: "hw4"
+format: docx
+editor: visual
+---
+
+```{r}
+library(here)
+library(tidyverse)
+library(lterdatasampler)
+library(naniar)
+# would be nice to have
+library(performance)
+library(broom)
+library(flextable)
+library(ggeffects)
+library(car)
+
+fish_size <- read_csv(here("ntl6_v12.csv"))
+```
+
+1\.
+
+**Mathematical**
+
+H0: β = 0
+
+Ha: β ≠ 0
+
+**Biological**
+
+Null: Fish length does not predict fish weight for trout perches
+
+Alternative: Fish length does predict fish weight for trout perches
+
+2\.
+
+```{r}
+filtered_fish_size <- subset(fish_size, select = c(length, weight))
+gg_miss_var(filtered_fish_size)
+```
+
+2a. The missing data
+
+3 & 4.
+
+```{r}
+linear_fish <- lm(weight ~ length, data = filtered_fish_size)
+# makes the viewer pane show a 2x2 grid of plots
+par(mfrow = c(2, 2))
+plot(linear_fish)
+```
+
+5.  
+
+Residuals vs Fitted: Residuals are not evenly or randomly distributed around the horizontal dotted line, violating the assumption of homoscedasticity.
+
+Normal Q-Q: The normal Q-Q shows residuals that are not normal because they do not follow a straight line (although they are rather straight until 2 on the theoretical quantile.
+
+Scale-Location This plot essentially tells us the same thing as the residuals vs. fitted plot (except using the square root of the standardized residuals), which is that since the residuals are not evenly or randomly distributed around the horizontal dotted line, the assumption of homoscedasticity is violated.
+
+Residuals vs Leverage This plot shows the influence outliers have on the model, and although the observations are within cook's distance, some are labeled illustrating that if they were taken out they would vjange the estimates
+
+6.  
+
+```{r}
+options(scipen = 999)
+model_summary <- summary(linear_fish)
+model_summary
+
+```
+
+7.  
+
+```{r}
+model_squares <- anova(linear_fish)
+model_squares
+model_squares_table <- tidy(model_squares) %>% 
+  # round the sum of squares and mean squares columns to have 5 digits (could be less)
+  mutate(across(sumsq:meansq, ~ round(.x, digits = 5))) %>% 
+  # round the F-statistic to have 1 digit
+  mutate(statistic = round(statistic, digits = 1)) %>% 
+  # replace the very very very small p value with < 0.001
+  mutate(p.value = case_when(
+    p.value < 0.001 ~ "< 0.001"
+  )) %>% 
+  # rename the stem_length cell to be meaningful
+  mutate(term = case_when(
+    term == "length" ~ "Fish Length",
+    TRUE ~ term
+  )) %>% 
+  # make the data frame a flextable object
+  flextable() %>% 
+  # change the header labels to be meaningful
+  set_header_labels(df = "Degrees of Freedom", 
+                    sumsq = "Sum of squares",
+                    meansq = "Mean squares",
+                    statistic = "F-statistic",
+                    p.value = "p-value")
+
+model_squares_table
+
+```
+
+8.  The Anova table relates to the table becuase both say f statistic degrees of freedom and p-value
+
+9.  We hypothesized that fish length predicted fish weight. Our null hypothesis was that fish length did not predict fish weight. Fish weight was significantly predicted by differing fish lengths (analysis of variance, F(1, 91088) = 136700.2, ⍺ = 0.05, p \< 0.001).
+
+10. 
+
+```{r}
+
+predictions <- ggpredict(linear_fish, terms = "length")
+
+predictions
+
+#caption was to large, so had to put up here instead of in 'labs'
+caption_text <- "This plot is illustrating the predicted values of fish weight (assuming a certain fish length) within a 95% confidence level. The blue line shows the trend line for the correlation between the length and weight."
+wrapped_caption <- str_wrap(caption_text, width = 100)
+
+
+plot_predictions <- ggplot(data = filtered_fish_size, 
+                           aes(x = length, y = weight)) +
+  # first plot the underlying data from maples_data
+  geom_point() +
+  # then plot the predictions
+  geom_line(data = predictions, 
+            aes(x = x, y = predicted), 
+            color = "blue", linewidth = 1) +
+  # then plot the 95% confidence interval from ggpredict
+  geom_ribbon(data = predictions, 
+              aes(x = x, y = predicted, ymin = conf.low, ymax = conf.high), 
+              alpha = .2) +
+  # theme and meaningful labels
+  theme_bw() +
+  labs(x = "Fish length",
+       y = "Fish weight")
+
+plot_predictions +labs(caption = wrapped_caption) 
+```
