@@ -16,6 +16,7 @@ library(flextable)
 library(ggeffects)
 library(car)
 
+#read in fish data csv
 fish_size <- read_csv(here("ntl6_v12.csv"))
 ```
 
@@ -36,17 +37,19 @@ Alternative: Fish length does predict fish weight for trout perches
 2\.
 
 ```{r}
+#filter fish data to only include the columns length and weight
 filtered_fish_size <- subset(fish_size, select = c(length, weight))
 #caption was to large, so had to put up here instead of in 'labs'
 caption_text <- "The missing data is relevant to the hypothesis becuase it shows that weights has lots of missing data, which is imporatant data to have when determining a relationship between the fish length and weight."
 wrapped_caption <- str_wrap(caption_text, width = 100)
-
+#shows missing data (specifically in weights, where there is over 250,000 missing observations)
 gg_miss_var(filtered_fish_size)+labs(caption = wrapped_caption) 
 ```
 
 3 & 4.
 
 ```{r}
+#linear regression of the filtered fish data, were length is the predictor and weight is the response
 linear_fish <- lm(weight ~ length, data = filtered_fish_size)
 # makes the viewer pane show a 2x2 grid of plots
 par(mfrow = c(2, 2))
@@ -66,8 +69,8 @@ Residuals vs Leverage This plot shows the influence outliers have on the model, 
 6.  
 
 ```{r}
-options(scipen = 999)
 model_summary <- summary(linear_fish)
+options(scipen = 999)
 model_summary
 
 ```
@@ -82,11 +85,11 @@ model_squares_table <- tidy(model_squares) %>%
   mutate(across(sumsq:meansq, ~ round(.x, digits = 5))) %>% 
   # round the F-statistic to have 1 digit
   mutate(statistic = round(statistic, digits = 1)) %>% 
-  # replace the very very very small p value with < 0.001
+  # replace the small p value with < 0.001
   mutate(p.value = case_when(
     p.value < 0.001 ~ "< 0.001"
   )) %>% 
-  # rename the stem_length cell to be meaningful
+  # rename the row names to be meaningful
   mutate(term = case_when(
     term == "length" ~ "Fish Length",
     TRUE ~ term
@@ -104,7 +107,7 @@ model_squares_table
 
 ```
 
-8.  The Anova table relates to the table becuase both say f statistic degrees of freedom and p-value
+8.  The Anova table relates to the table because both say f statistic degrees of freedom and p-value
 
 9.  We hypothesized that fish length predicted fish weight. Our null hypothesis was that fish length did not predict fish weight. Fish weight was significantly predicted by differing fish lengths (analysis of variance, F(1, 91088) = 136700.2, ⍺ = 0.05, p \< 0.001).
 
