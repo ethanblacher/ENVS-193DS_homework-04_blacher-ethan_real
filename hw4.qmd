@@ -37,10 +37,12 @@ Alternative: Fish length does predict fish weight for trout perches
 
 ```{r}
 filtered_fish_size <- subset(fish_size, select = c(length, weight))
-gg_miss_var(filtered_fish_size)
-```
+#caption was to large, so had to put up here instead of in 'labs'
+caption_text <- "The missing data is relevant to the hypothesis becuase it shows that weights has lots of missing data, which is imporatant data to have when determining a relationship between the fish length and weight."
+wrapped_caption <- str_wrap(caption_text, width = 100)
 
-2a. The missing data
+gg_miss_var(filtered_fish_size)+labs(caption = wrapped_caption) 
+```
 
 3 & 4.
 
