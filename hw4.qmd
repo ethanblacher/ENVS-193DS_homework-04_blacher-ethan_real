@@ -64,7 +64,7 @@ Normal Q-Q: The normal Q-Q shows residuals that are not normal because they do n
 
 Scale-Location This plot essentially tells us the same thing as the residuals vs. fitted plot (except using the square root of the standardized residuals), which is that since the residuals are not evenly or randomly distributed around the horizontal dotted line, the assumption of homoscedasticity is violated.
 
-Residuals vs Leverage This plot shows the influence outliers have on the model, and although the observations are within cook's distance, some are labeled illustrating that if they were taken out they would vjange the estimates
+Residuals vs Leverage This plot shows the influence outliers have on the model, and although the observations are within cook's distance, some are labeled illustrating that if they were taken out they would change the estimates
 
 6.  
 
@@ -114,7 +114,7 @@ model_squares_table
 10. 
 
 ```{r}
-
+# extract model predictions using ggpredict
 predictions <- ggpredict(linear_fish, terms = "length")
 
 predictions
