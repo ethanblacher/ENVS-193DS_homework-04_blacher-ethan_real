@@ -2,7 +2,7 @@
 
 1. General Information
 
-The data file (ntl6_v12.csv) is made up of data on fish collected in the North Temperate Lakes from 1981 to 2022. Although the data contains many columns (specific observations about the fish), for the sake of this project we are ony concerned with a few columns, specifically length and weight. The observations were collected once a year from eleven sites.
+The data file (ntl6_v12.csv) is made up of data on fish collected in the North Temperate Lakes from 1981 to 2022. Although the data contains many columns (specific observations about the fish), for the sake of this project we are only concerned with a few columns, specifically length and weight. The observations were collected once a year from eleven sites.
 
 2. Data and File Overview
 
@@ -14,7 +14,7 @@ To access the the data used for the project as long as ancillary data, use the w
 
 4. Methodological information
 
-The fish assemblages of eleven principal lakes (Allequash, Big Muskellunge, Crystal, Sparkling, Trout, Crystal Bog, Trout Bog, Mendota, Monona, Wingra, and Fish) are monitered using data that is collected annually. While most lakes began sampling in 1981, Lakes Monona, Wingra, and Fish began sampling in 1995. Seine, crayfish or minnow traps, fyke nets, and electrofishing equipment are used to collect data at six littoral sites per lake. Two pelagic samples per lake are collected from the deepest point using vertically hung gill nets. At two locations each lake, a trammel net collects samples across the thermocline. Only fyke nets and minnow traps are used in the Trout and Crystal Bog lakes.
+The fish assemblages of eleven principal lakes (Allequash, Big Muskellunge, Crystal, Sparkling, Trout, Crystal Bog, Trout Bog, Mendota, Monona, Wingra, and Fish) are monitered using data that is collected annually. While most lakes began sampling in 1981, Lakes Monona, Wingra, and Fish began sampling in 1995. Seine, crayfish or minnow traps, fyke nets, and electrofishing equipment are used to collect data at six littoral sites per lake. Additionally, two pelagic samples per lake are collected from the deepest point using vertically hung gill nets. Also, at two locations each lake, a trammel net collects samples across the thermocline. Only fyke nets and minnow traps are used in the Trout and Crystal Bog lakes.
 
 5. Data-specific information
 
