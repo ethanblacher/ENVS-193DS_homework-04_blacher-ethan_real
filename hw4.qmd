@@ -4,7 +4,7 @@ format: docx
 editor: visual
 ---
 
-```{r}
+```{r package-set-up}
 library(here)
 library(tidyverse)
 library(lterdatasampler)
@@ -15,7 +15,7 @@ library(broom)
 library(flextable)
 library(ggeffects)
 library(car)
-
+library(ggplot2)
 #read in fish data csv
 fish_size <- read_csv(here("ntl6_v12.csv"))
 ```
@@ -34,13 +34,13 @@ Null: Fish length does not predict fish weight for trout perches
 
 Alternative: Fish length does predict fish weight for trout perches
 
-2\.
+2 & 2a.
 
-```{r}
+```{r missing-data-vis}
 #filter fish data to only include the columns length and weight
 filtered_fish_size <- subset(fish_size, select = c(length, weight))
 #caption was to large, so had to put up here instead of in 'labs'
-caption_text <- "The missing data is relevant to the hypothesis becuase it shows that weights has lots of missing data, which is imporatant data to have when determining a relationship between the fish length and weight."
+caption_text <- "The missing data is relevant to the hypothesis becuase it shows that weights has lots of missing data, which could introduce bias and affect the accuracy of the regression model."
 wrapped_caption <- str_wrap(caption_text, width = 100)
 #shows missing data (specifically in weights, where there is over 250,000 missing observations)
 gg_miss_var(filtered_fish_size)+labs(caption = wrapped_caption) 
@@ -48,7 +48,7 @@ gg_miss_var(filtered_fish_size)+labs(caption = wrapped_caption)
 
 3 & 4.
 
-```{r}
+```{r linear-models}
 #linear regression of the filtered fish data, were length is the predictor and weight is the response
 linear_fish <- lm(weight ~ length, data = filtered_fish_size)
 # makes the viewer pane show a 2x2 grid of plots
@@ -60,15 +60,15 @@ plot(linear_fish)
 
 Residuals vs Fitted: Residuals are not evenly or randomly distributed around the horizontal dotted line, violating the assumption of homoscedasticity.
 
-Normal Q-Q: The normal Q-Q shows residuals that are not normal because they do not follow a straight line (although they are rather straight until 2 on the theoretical quantile.
+Normal Q-Q: The normal Q-Q shows residuals that are not normal because they do not follow a straight line (although they are rather straight until 2 on the theoretical quantile).
 
 Scale-Location This plot essentially tells us the same thing as the residuals vs. fitted plot (except using the square root of the standardized residuals), which is that since the residuals are not evenly or randomly distributed around the horizontal dotted line, the assumption of homoscedasticity is violated.
 
-Residuals vs Leverage This plot shows the influence outliers have on the model, and although the observations are within cook's distance, some are labeled illustrating that if they were taken out they would change the estimates
+Residuals vs Leverage This plot shows the influence outliers have on the model, and although the observations are within cook's distance, some are labeled illustrating that if they were taken out they would change the estimates.
 
 6.  
 
-```{r}
+```{r model-summary-table}
 model_summary <- summary(linear_fish)
 options(scipen = 999)
 model_summary
@@ -77,7 +77,7 @@ model_summary
 
 7.  
 
-```{r}
+```{r }
 model_squares <- anova(linear_fish)
 model_squares
 model_squares_table <- tidy(model_squares) %>% 
@@ -107,13 +107,13 @@ model_squares_table
 
 ```
 
-8.  The Anova table relates to the table because both say f statistic degrees of freedom and p-value
+8.  The Anova table relates to the summary object because both say the f statistic, degrees of freedom, and p-value. However, the summary object provides more information (such as standard errors) and other statistics for interpreting the data.
 
-9.  We hypothesized that fish length predicted fish weight. Our null hypothesis was that fish length did not predict fish weight. Fish weight was significantly predicted by differing fish lengths (analysis of variance, F(1, 91088) = 136700.2, ⍺ = 0.05, p \< 0.001).
+9.  We hypothesized that fish length predicted fish weight. Our null hypothesis was that fish length did not predict fish weight. Our results provided evidence to reject the null hypothesis, as fish weight was significantly predicted by differing fish lengths (analysis of variance, F(1, 91088) = 136700.2, ⍺ = 0.05, p \< 0.001).
 
-10. 
+10\.
 
-```{r}
+```{r plotting-predictions}
 # extract model predictions using ggpredict
 predictions <- ggpredict(linear_fish, terms = "length")
 
@@ -122,7 +122,6 @@ predictions
 #caption was to large, so had to put up here instead of in 'labs'
 caption_text <- "This plot is illustrating the predicted values of fish weight (assuming a certain fish length) within a 95% confidence level. The blue line shows the trend line for the correlation between the length and weight."
 wrapped_caption <- str_wrap(caption_text, width = 100)
-
 
 plot_predictions <- ggplot(data = filtered_fish_size, 
                            aes(x = length, y = weight)) +
@@ -134,8 +133,9 @@ plot_predictions <- ggplot(data = filtered_fish_size,
             color = "blue", linewidth = 1) +
   # then plot the 95% confidence interval from ggpredict
   geom_ribbon(data = predictions, 
-              aes(x = x, y = predicted, ymin = conf.low, ymax = conf.high), 
-              alpha = .2) +
+              aes(x = x, y = predicted, ymin = predicted - conf.low, ymax = predicted + conf.high), 
+            #  makes the confidence interval less opaque and more transparent
+            alpha = .2) +
   # theme and meaningful labels
   theme_bw() +
   labs(x = "Fish length",
