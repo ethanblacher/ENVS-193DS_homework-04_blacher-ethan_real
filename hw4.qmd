@@ -4,6 +4,12 @@ format: docx
 editor: visual
 ---
 
+Ethan Blacher
+
+5/24/23
+
+193DS HW4
+
 ```{r, message=FALSE}
 library(here)
 library(tidyverse)
