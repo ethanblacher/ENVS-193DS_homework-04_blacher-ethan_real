@@ -10,6 +10,10 @@ Ethan Blacher
 
 193DS HW4
 
+https://github.com/ethanblacher/ENVS-193DS_homework-04_blacher-ethan_real.git
+
+I realized I made a mistake in regards to the analysis of the plots, and when I tried to change it my doc wouldnt run because it was looking for fish data in "code" even though I said it was in "data". I ended up moving it to "code" and it worked but I dont know what went wrong
+
 ```{r, message=FALSE}
 library(here)
 library(tidyverse)
