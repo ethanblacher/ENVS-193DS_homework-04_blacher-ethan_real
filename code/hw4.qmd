@@ -117,7 +117,7 @@ model_squares_table
 
 8.  The Anova table relates to the summary object because both say the f statistic, degrees of freedom, and p-value. However, the summary object provides more information (such as standard errors) and other statistics for interpreting the data.
 
-9.  We hypothesized that fish length predicted fish weight. Our null hypothesis was that fish length did not predict fish weight. Our results provided evidence to reject the null hypothesis, as fish weight was significantly predicted by differing fish lengths (analysis of variance, F(1, 288) = 1,280.8, ⍺ = 0.05, p \< 0.001).
+9.  We hypothesized that fish length predicted fish weight, with our null hypothesis being that fish length did not predict fish weight. We ran a linear regression on a sample size of 290 (489 observations - 199 missing observations), with results providing evidence to reject the null hypothesis, as fish weight was significantly predicted by differing fish lengths (analysis of variance, F(1, 288) = 1,280.8, ⍺ = 0.05, p \< 0.001) along with an adjusted R-squared of nearly .82.
 
 10\.
 
